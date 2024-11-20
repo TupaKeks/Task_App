@@ -1,0 +1,86 @@
+{% extends 'tskApp/layout.html' %}
+
+{% block title %} Task List {% endblock %}
+
+{% block content %}
+<h1 class="text-center">Tasks</h1>
+<table class="table table-bordered table-striped text-center">
+    <thead class="thead-dark">
+        <tr>
+            <th>Task Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Time</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>
+                <span class="highlight" style="background-color: green;">{{ task.timer|time:"H:i:s" }}</span> <!-- Highlighted area around the timer -->
+            </td>
+            <td>
+                <a href="{% url 'task_update' task.id %}" class="btn btn-warning">
+                    Update
+                </a>
+                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const taskRows = document.querySelectorAll("tbody tr");
+        
+                taskRows.forEach((row, index) => {
+                    const timerCell = row.querySelector("td:nth-child(4)"); // Assuming the timer is in the 4th cell
+                    const timerSpan = timerCell.querySelector('.highlight'); // Select the span with the highlight class
+                    const timerValue = timerSpan.textContent.trim(); // Get the text from the span
+                    const timeParts = timerValue.split(':'); // Assuming format HH:MM:SS
+                    let totalSeconds = parseInt(timeParts[0]) * 3600 + parseInt(timeParts[1]) * 60 + parseInt(timeParts[2]);
+                    const initialSeconds = totalSeconds; // Store the initial total seconds for percentage calculation
+        
+                    // Check if there's a saved timer value in localStorage
+                    const savedTime = localStorage.getItem(`timer-${index}`);
+                    if (savedTime) {
+                        totalSeconds = parseInt(savedTime); // Use the saved time
+                    }
+        
+                    const countdown = setInterval(() => {
+                        if (totalSeconds <= 0) {
+                            clearInterval(countdown);
+                            timerSpan.textContent = "Time's up!"; // Update only the span
+                            timerSpan.style.backgroundColor = 'red'; // Change color to red when time is up
+                            localStorage.removeItem(`timer-${index}`); // Remove the timer from localStorage
+                        } else {
+                            totalSeconds--;
+                            const hours = Math.floor(totalSeconds / 3600);
+                            const minutes = Math.floor((totalSeconds % 3600) / 60);
+                            const seconds = totalSeconds % 60;
+                            timerSpan.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; // Update only the span
+        
+                            // Change highlight color based on remaining time
+                            const percentageLeft = (totalSeconds / initialSeconds) * 100;
+                            if (percentageLeft > 50) {
+                                timerSpan.style.backgroundColor = 'green'; // More than 50% time left
+                            } else if (percentageLeft > 20) {
+                                timerSpan.style.backgroundColor = 'yellow'; // Less than 50% but more than 20%
+                            } else {
+                                timerSpan.style.backgroundColor = 'red'; // Less than 20% time left
+                            }
+        
+                            // Save the remaining time in localStorage
+                            localStorage.setItem(`timer-${index}`, totalSeconds);
+                        }
+                    }, 1000);
+                });
+            });
+        </script>
+    </tbody>
+</table>
+{% endblock %}
