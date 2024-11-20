@@ -3,12 +3,19 @@
 ## Overview
 
 The Task List Application is a web-based tool that allows users to manage their tasks effectively. Users can create, update, and delete tasks while keeping track of the time allocated for each task. The application features a countdown timer for each task, helping users stay on track and manage their time efficiently.
+![image](https://github.com/user-attachments/assets/8b1fa491-9c75-419d-9cad-fad5bd557587)
+
+
 
 ## Features
 
 - **Task Management**: Create, update, and delete tasks.
+  ![image](https://github.com/user-attachments/assets/db438fdd-26dd-4047-8292-3f64c1c819a9)
+
 - **Countdown Timer**: Each task has a timer that counts down the allocated time.
 - **Dynamic UI**: The application updates the timer in real-time and visually indicates the remaining time with color changes.
+  ![image](https://github.com/user-attachments/assets/93a19994-7e3f-4759-8443-4a6b288bfb7a)
+
 - **Local Storage**: The remaining time for each task is saved in the browser's local storage, allowing users to refresh the page without losing their progress.
 
 ## Technologies Used
